@@ -1,0 +1,33 @@
+{
+  "name": "pbl-sem-4-",
+  "version": "1.0.0",
+  "description": "Automated contactless attendance system using face recognition.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piyush-terkar/PBL-Sem-4-.git"
+  },
+  "keywords": [
+    "Facial",
+    "recognition",
+    "attendance"
+  ],
+  "author": "Piyush Pradeep Terkar, Mitali Kundlik Chougule, Amey Abhay Deshingkar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/piyush-terkar/PBL-Sem-4-/issues"
+  },
+  "homepage": "https://github.com/piyush-terkar/PBL-Sem-4-#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "ejs-mate": "^3.0.0",
+    "express": "^4.17.1",
+    "method-override": "^3.0.0",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "serve-favicon": "^2.5.0"
+  }
+}
