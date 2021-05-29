@@ -9,6 +9,12 @@ const ExpressError = require('./utils/ExpressError');
 const database = require('./database/dbServer')
 const { query } = require('./database/dbServer')
 const app = express()
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
+
+const IP = "127.0.0.1";
+
 
 app.engine('ejs', ejsMate)
 
@@ -53,11 +59,12 @@ app.post('/report', (req, res) => {
 })
 
 app.get('/stream', (req, res) => {
-    console.log("handing Request over to flask server");
     const stylesheet = 'css/streamvideo.css';
     const jsScript = 'js/streamvideo.js';
-    res.render('pages/streamvideo', { stylesheet, jsScript })
+    IP;
+    res.render('pages/streamvideo', { stylesheet, jsScript, IP });
 })
+
 
 
 app.all('*', (req, res, next) => {
@@ -74,6 +81,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('pages/notfound', { stylesheet, jsScript, err });
 })
 
-app.listen(3000, () => {
+server.listen(3000, () => {
     console.log("Request handling server listening on port 3000");
 })

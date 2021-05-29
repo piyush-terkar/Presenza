@@ -1,3 +1,16 @@
 <% layout('layouts/boilerplate')
     %>
-    <h1>Body of Stream</h1>
+    <p id="ip"
+        style="display: none;">
+        <%= IP
+            %>
+    </p>
+    <div id="container">
+        <video autoplay="true"
+            id="videoElement">
+
+        </video>
+    </div>
+    <script async
+        src="https://docs.opencv.org/master/opencv.js"
+        type="text/javascript"></script>
