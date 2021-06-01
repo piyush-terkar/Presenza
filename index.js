@@ -12,6 +12,16 @@ const app = express()
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+    destination: 'temp',
+    filename: function (req, file, cb) {
+        cb(null, file.originalname + path.extname(file.originalname));
+    }
+})
+const upload = multer({ storage: storage }).single('img');
+app.use(express.static('temp'));
 
 const IP = "127.0.0.1";
 
@@ -41,8 +51,16 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
     const stylesheet = 'css/success.css';
     const jsScript = 'js/success.js';
-    console.log(req.body);
-    res.render('pages/success', { stylesheet, jsScript });
+    upload(req, res, (err) => {
+        if (err) {
+            res.render('pages/notfound', { stylesheet, jsScript });
+        } else {
+            console.log(req.body);
+            const { rollno } = req.params;
+            console.log(req.file);
+            res.render('pages/success', { stylesheet, jsScript });
+        }
+    })
 })
 
 app.get('/report', (req, res) => {

@@ -1,3 +1,23 @@
-<% layout('layouts/boilerplate')
-    %>
-    <h1>Body of Report</h1>
+<% layout('layouts/boilerplate') %>
+
+    <div class="date container">
+        <div class="row">
+            <div class="md-form col-md-6">
+                <label for="date-picker-example">From</label>
+                <input placeholder="Select date" type="date" id="date-picker-example" class="form-control datepicker">
+            </div>
+
+            <div class="md-form col-md-6">
+                <label for="date-picker-example">To</label>
+                <input placeholder="Select date" type="date" id="date-picker-example" class="form-control datepicker">
+            </div>
+        </div>
+        <form action="">
+            <div id="button">
+                <button type="submit" class="btn btn-primary">View Report</button>
+            </div>
+        </form>
+        <div class="tbody">
+
+        </div>
+    </div>

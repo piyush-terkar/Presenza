@@ -1,20 +1,16 @@
-<% layout('layouts/boilerplate')
-    %>
+<% layout('layouts/boilerplate') %>
 
     <div class="row">
         <div class="col-6 offset-3">
 
-            <div class="alert alert-danger"
-                role="alert">
+            <div class="alert alert-danger" role="alert">
                 <h4 class="alert-heading">
-                    <%= err.message
-                        %>
+                    <%= err.message %>
                 </h4>
                 <p></p>
                 <hr>
                 <p class="mb-0">
-                    <%= err.stack
-                        %>
+                    <%= err.stack %>
                 </p>
             </div>
         </div>

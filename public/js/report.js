@@ -1,5 +1,18 @@
-const h1 = document.querySelector('h1');
+const datepicker = document.querySelector('.datepicker');
+const button = document.querySelector('#button');
+const tbody = document.querySelector('.tbody');
 
-const test = document.createElement('h1');
-test.innerText = "js link test";
-h1.appendChild(test);
+const div = document.createElement('div');
+
+datepicker.pickadate({
+    today: '',
+    clear: 'Clear selection',
+    close: 'Cancel'
+});
+
+button.addEventListener.click(function () {
+    {
+        div.innerHTML = "Hello";
+        tbody.append(div);
+    }
+})

@@ -1,3 +1,8 @@
-h1{
-    color: green;
+.date{
+    height: 80vh;
+    padding-top: 30PX;
+}
+
+#button{
+    padding-top: 20px;
 }

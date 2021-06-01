@@ -1,3 +1,9 @@
-h1{
-    color: green;
+
+.register{
+        padding: 40px 100px 40px 100px;
+        margin-left: 40px;
+        margin-right: 40px;
+        display:flexbox;
+        align-items: center;
+   
 }

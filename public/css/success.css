@@ -1,3 +1,35 @@
-h1{
-    color: green;
+
+
+  @keyframes bounce {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-15px);
+    }
+  }
+@-webkit-keyframes bounce {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-15px);
+    }
+  } 
+
+
+#card{
+    animation: bounce 2s ;
+  -webkit-animation: bounce 2s;
+  margin: 50px 100px 50px 100px;
+
+} 
+.c{
+    height: 80vh;
+}
+
+@media(max-width:400px){
+  .btn{
+    margin-top: 2px;
+  }
 }
