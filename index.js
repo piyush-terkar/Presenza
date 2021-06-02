@@ -39,7 +39,9 @@ app.use(methodOverride('_method'))
 app.use(favicon(path.join(__dirname, 'public/images/favicon.png')))
 
 app.get('/', (req, res) => {
-    res.send('Use \'/\' and your page name, We don\'t have a homepage for this project...');
+    const stylesheet = 'css/home.css';
+    const jsScript = 'js/home.js';
+    res.render('pages/home', { stylesheet, jsScript });
 })
 
 app.get('/register', (req, res) => {
@@ -117,6 +119,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('pages/notfound', { stylesheet, jsScript, err });
 })
 
-server.listen(3000, IP, () => {
+server.listen(3000, () => {
     console.log("Request handling server listening on port 3000");
 })

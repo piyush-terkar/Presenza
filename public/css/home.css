@@ -1,0 +1,36 @@
+
+
+.navbar{
+    display: none;
+}
+
+ 
+.footer{
+    display: none;
+}
+
+body{
+    background: url(../images/backgroung.jpg);
+}
+
+.h{
+    text-align: center;
+    padding-left: 5px;
+    margin-top: 10%;
+    text-decoration: solid;
+}
+
+.text{
+    padding-top: 5%;
+}
+
+p{
+    line-height: 1;
+    font-family: sans-serif;
+}
+
+@media (max-width: 700px){
+    .row{
+        display: block;
+    }
+}
