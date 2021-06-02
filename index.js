@@ -11,20 +11,20 @@ const { query } = require('./database/dbServer')
 const app = express()
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-
+const lookup = require('./utils/lookup');
 const multer = require('multer')
+const { stringify } = require('querystring')
 
 const storage = multer.diskStorage({
     destination: 'temp',
     filename: function (req, file, cb) {
-        cb(null, file.originalname + path.extname(file.originalname));
+        cb(null, file.originalname);
     }
 })
 const upload = multer({ storage: storage }).single('img');
 app.use(express.static('temp'));
 
-const IP = "127.0.0.1";
-
+const IP = "192.168.1.10";
 
 app.engine('ejs', ejsMate)
 
@@ -51,13 +51,13 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
     const stylesheet = 'css/success.css';
     const jsScript = 'js/success.js';
-    upload(req, res, (err) => {
+    upload(req, res, async (err) => {
         if (err) {
             res.render('pages/notfound', { stylesheet, jsScript });
         } else {
-            console.log(req.body);
-            const { rollno } = req.params;
-            console.log(req.file);
+            console.log(req.body.rollno);
+            // request IP of RPI to send here (req.file);
+            await lookup.interval(req.body.rollno);
             res.render('pages/success', { stylesheet, jsScript });
         }
     })
@@ -83,7 +83,25 @@ app.get('/stream', (req, res) => {
     res.render('pages/streamvideo', { stylesheet, jsScript, IP });
 })
 
-
+let secKey = "hi"
+app.post('/mark', (req, res) => {
+    if (req.body.handshake) {
+        secKey = "hi"
+        console.log("handshake initiated")
+        res.send(secKey)
+    } else if (req.body.SEC_KEY && req.body.SEC_KEY === secKey) {
+        console.log("key match")
+        if (req.body.rno) {
+            console.log(req.body.rno)
+        } else {
+            console.log("handshake successfull!");
+        }
+        secKey = (Math.floor(Math.random() * 100) + 1).toString(2);
+        res.send(secKey);
+    } else {
+        res.send("Nice try but no proxy!");
+    }
+})
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
@@ -99,6 +117,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('pages/notfound', { stylesheet, jsScript, err });
 })
 
-server.listen(3000, () => {
+server.listen(3000, IP, () => {
     console.log("Request handling server listening on port 3000");
 })
