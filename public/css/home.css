@@ -29,8 +29,33 @@ p{
     font-family: sans-serif;
 }
 
-@media (max-width: 700px){
-    .row{
-        display: block;
+@media (max-width: 750px){
+    #image{
+        width: 100%;
+        display: contents;
+        padding-bottom: 2px;
+     }
+    .info{
+      display: contents;
+       text-align: center;
     }
+    .title{
+        text-align: center;
+        padding-left: 30%;
+    }
+    hr{
+        display: contents;
+    }
+    .main{
+        height: auto;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .text{
+        text-align: center;
+    }
+    .menu{
+        background-image: linear-gradient(to top, #90e0ef, #89cfef, #8ebce9, #9aa8dc, #a794c7);
+    }
+   
 }
