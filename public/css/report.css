@@ -1,8 +1,11 @@
 .date{
-    height: 100vh;
     padding-top: 30PX;
 }
 
 #button{
     padding-top: 20px;
+}
+
+#download{
+    display: none;
 }

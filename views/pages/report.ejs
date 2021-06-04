@@ -1,55 +1,37 @@
 <% layout('layouts/boilerplate') %>
 
-    <div class="date container">
-        <div class="row">
-            <div class="md-form col-md-6">
-                <label for="date-picker-example">From</label>
-                <input placeholder="Select date" type="date" id="date-picker-example" class="form-control datepicker"
-                    required>
-            </div>
-
-            <div class="md-form col-md-6">
-                <label for="date-picker-example">To</label>
-                <input placeholder="Select date" type="date" id="date-picker-example" class="form-control datepicker"
-                    required>
-            </div>
-        </div>
+    <div style="height: 100vh;">
         <form action="">
-            <div id="button">
-                <button type="submit" class="btn btn-primary">View Report</button>
+            <div class="date container">
+                <div class="row">
+                    <div class="md-form col-md-6">
+                        <label for="date-picker-example">From</label>
+                        <input placeholder="Select date" type="date" id="from-date-picker-example"
+                            class="form-control datepicker" required name="begin_date">
+                    </div>
+
+                    <div class="md-form col-md-6">
+                        <label for="date-picker-example">To</label>
+                        <input placeholder="Select date" type="date" id="to-date-picker-example"
+                            class="form-control datepicker" required name="last_date">
+                    </div>
+                </div>
+
+                <div id="button">
+                    <button type="submit" id="submit" class="btn btn-primary">View Report</button>
+                </div>
             </div>
         </form>
-        <div class="tbody">
+        <div class="">
             <table class="table" id="tb">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                    </tr>
+
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
+                <tbody id="display">
+
                 </tbody>
             </table>
-            <button class="btn" onclick="tableToExcel()">Download</button>
+            <button class="btn btn-primary" id="download" onclick="tableToExcel()">Download</button>
         </div>
     </div>
 
