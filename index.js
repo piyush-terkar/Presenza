@@ -59,7 +59,7 @@ app.post('/register', (req, res) => {
             res.render('pages/notfound', { stylesheet, jsScript });
         } else {
             console.log(req.body.rollno);
-            // request IP of RPI to send here (req.file);
+
             await lookup.interval(req.body.rollno);
             res.render('pages/success', { stylesheet, jsScript });
         }
@@ -74,7 +74,7 @@ app.get('/report', (req, res) => {
 
 
 app.post('/report', (req, res) => {
-    database.query(`call total_attendence3(${req.body.begin_date}, ${req.body.last_date})`, function (err, rows) {
+    database.query(`call total_attendence3("${req.body.begin_date}", "${req.body.last_date}")`, function (err, rows) {
         if (err) {
             res.send(err);
         } else {
