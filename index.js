@@ -9,6 +9,7 @@ const ExpressError = require('./utils/ExpressError');
 const database = require('./database/dbServer')
 const { query } = require('./database/dbServer')
 const app = express()
+const mailer = require('./utils/email');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const lookup = require('./utils/lookup');
@@ -73,9 +74,13 @@ app.get('/report', (req, res) => {
 
 
 app.post('/report', (req, res) => {
-    const stylesheet = 'css/success.css';
-    const jsScript = 'js/success.js';
-    res.render('pages/success', { stylesheet, jsScript });
+    database.query(`call total_attendence3(${req.body.begin_date}, ${req.body.last_date})`, function (err, rows) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
 })
 
 app.get('/stream', (req, res) => {
@@ -94,7 +99,16 @@ app.post('/mark', (req, res) => {
     } else if (req.body.SEC_KEY && req.body.SEC_KEY === secKey) {
         console.log("key match")
         if (req.body.rno) {
-            console.log(req.body.rno)
+            database.query(`call attendence_procedure(${req.body.rno});`, function (err, rows) {
+                if (err) {
+                    console.log("already marked present");
+                } else {
+                    database.query(`select email from student where rollno = ${req.body.rno};`, function (err, row) {
+                        console.log(row[0].email);
+                        mailer.sendemail(row[0].email);
+                    })
+                }
+            })
         } else {
             console.log("handshake successfull!");
         }
@@ -119,6 +133,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('pages/notfound', { stylesheet, jsScript, err });
 })
 
-server.listen(3000, () => {
+server.listen(3000, IP, () => {
     console.log("Request handling server listening on port 3000");
 })
