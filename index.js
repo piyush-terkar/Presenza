@@ -4,17 +4,14 @@ const path = require('path')
 const morgan = require('morgan')
 const methodOverride = require('method-override')
 const favicon = require('serve-favicon')
-const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const database = require('./database/dbServer')
-const { query } = require('./database/dbServer')
 const app = express()
 const mailer = require('./utils/email');
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
-const lookup = require('./utils/lookup');
 const multer = require('multer')
-const { stringify } = require('querystring')
+const request = require('request');
+const fs = require("fs");
+const { studentSchema, reportSchema } = require('./schemas.js');
 
 const storage = multer.diskStorage({
     destination: 'temp',
@@ -26,6 +23,17 @@ const upload = multer({ storage: storage }).single('img');
 app.use(express.static('temp'));
 
 const IP = "192.168.1.10";
+
+
+validateReport = (req, res, next) => {
+    const { error } = reportSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
 
 app.engine('ejs', ejsMate)
 
@@ -51,17 +59,59 @@ app.get('/register', (req, res) => {
     res.render('pages/register', { stylesheet, jsScript });
 })
 
-app.post('/register', (req, res) => {
-    const stylesheet = 'css/success.css';
-    const jsScript = 'js/success.js';
-    upload(req, res, async (err) => {
-        if (err) {
-            res.render('pages/notfound', { stylesheet, jsScript });
-        } else {
-            console.log(req.body.rollno);
 
-            await lookup.interval(req.body.rollno);
-            res.render('pages/success', { stylesheet, jsScript });
+function fsExistsSync(myDir) {
+    try {
+        fs.accessSync(myDir);
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+app.post('/register', (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            res.render('pages/notfound', { stylesheet, jsScript, err });
+        } else {
+            database.query(`call register("${req.body.student_name}", ${req.body.rollno}, "${req.body.address}", "${req.body.branch}", "${req.body.email}")`, async (err, rows) => {
+                if (err) {
+                    const stylesheet = 'css/notfound.css';
+                    const jsScript = 'js/notfound.js';
+                    res.status(500).render('pages/notfound', { stylesheet, jsScript, err });
+                } else {
+                    if (fsExistsSync("temp/")) {
+                        console.log("File Found");
+                        fs.readdir("temp/", async (err, files) => {
+                            const formData = {
+                                'rollno': req.body.rollno,
+                                'img': fs.createReadStream("temp/" + files[1])
+                            }
+                            let result = await request.post({ url: 'http://192.168.1.26:8000', formData: formData }, (err, rs, body) => {
+                                if (err) {
+                                    database.query(`delete from student where rollno = ${req.body.rollno}`)
+                                    fs.unlinkSync(`temp/${files[1]}`);
+                                    console.log("File Deleted");
+                                    const stylesheet = 'css/notfound.css';
+                                    const jsScript = 'js/notfound.js';
+                                    res.status(500).render('pages/notfound', { stylesheet, jsScript, err });
+                                }
+                                else {
+                                    console.log("file sent");
+                                    console.log(body);
+                                    fs.unlinkSync(`temp/${files[1]}`);
+                                    console.log("File Deleted");
+                                    const stylesheet = 'css/success.css';
+                                    const jsScript = 'js/success.js';
+                                    res.render('pages/success', { stylesheet, jsScript });
+                                }
+                            })
+                        })
+                    }
+
+                }
+            })
         }
     })
 })
@@ -73,7 +123,7 @@ app.get('/report', (req, res) => {
 })
 
 
-app.post('/report', (req, res) => {
+app.post('/report', validateReport, (req, res) => {
     database.query(`call total_attendence3("${req.body.begin_date}", "${req.body.last_date}")`, function (err, rows) {
         if (err) {
             res.send(err);
@@ -81,13 +131,6 @@ app.post('/report', (req, res) => {
             res.send(rows);
         }
     })
-})
-
-app.get('/stream', (req, res) => {
-    const stylesheet = 'css/streamvideo.css';
-    const jsScript = 'js/streamvideo.js';
-    IP;
-    res.render('pages/streamvideo', { stylesheet, jsScript, IP });
 })
 
 let secKey = "hi"
@@ -133,6 +176,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('pages/notfound', { stylesheet, jsScript, err });
 })
 
-server.listen(3000, IP, () => {
+app.listen(3000, IP, () => {
     console.log("Request handling server listening on port 3000");
 })
